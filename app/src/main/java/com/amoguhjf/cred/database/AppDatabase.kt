@@ -5,12 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Note::class, Teams::class, Matches::class, Predictions::class], version = 1)
+@Database(entities = [Credit::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun noteDao(): NoteDao
-    abstract fun teamsDao(): TeamsDao
-    abstract fun matchesDao(): MatchesDao
-    abstract fun predictionsDao(): PredictionsDao
+    abstract fun creditDao(): CreditDao
 
     companion object {
         @Volatile

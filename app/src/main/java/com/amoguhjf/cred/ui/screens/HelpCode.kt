@@ -1,5 +1,27 @@
 package com.amoguhjf.cred.ui.screens
 
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.amoguhjf.cred.R
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,6 +41,69 @@ sealed interface RootScreen {
 }
 
 //------------------------------------------
+
+@Composable
+fun EditField(name : String, text : String, onText: (String) -> Unit, placeholderText : String){
+    Text(text = name, fontSize = 16.sp, color = colorResource(R.color.darkblue),
+        fontFamily = FontFamily(Font(R.font.interregular)),
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(modifier = Modifier.padding(top = 4.dp))
+    OutlinedTextField(value = text,  onValueChange = { newValue -> onText(newValue) },
+        placeholder = { Text(placeholderText, color = colorResource(R.color.green)) },
+        textStyle = TextStyle(color = colorResource(R.color.darkblue), fontSize = 16.sp),
+        modifier = Modifier.fillMaxWidth().background(colorResource(R.color.white), RoundedCornerShape(10.dp)),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(R.color.darkblue),
+            unfocusedBorderColor = colorResource(R.color.darkblue),
+            cursorColor = colorResource(R.color.darkblue),
+            placeholderColor = colorResource(R.color.darkblue),
+            textColor = colorResource(R.color.darkblue)
+        ),
+        shape = RoundedCornerShape(10.dp)
+    )
+}
+
+@Composable
+fun EditFieldNumbers(name : String, text : String, onText: (String) -> Unit, placeholderText : String){
+    val context = LocalContext.current
+
+    Text(text = name, fontSize = 16.sp, color = colorResource(R.color.darkblue),
+        fontFamily = FontFamily(Font(R.font.interregular)),
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(modifier = Modifier.padding(top = 4.dp))
+    OutlinedTextField(value = text, onValueChange = { newValue ->
+            if (newValue.length <= 10) {
+                if (newValue.isNotEmpty()) {
+                    if (newValue.first().isDigit()) {
+                        onText(newValue)
+                    } else {
+                        if (text.isEmpty()) {
+                            Toast.makeText(context, "First character must be a digit", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    onText(newValue)
+                }
+            } else {
+                Toast.makeText(context, "Maximum length of $10 characters reached", Toast.LENGTH_SHORT).show()
+            }
+        },
+        placeholder = { Text(placeholderText, color = colorResource(R.color.green)) },
+        textStyle = TextStyle(color = colorResource(R.color.darkblue), fontSize = 20.sp),
+        modifier = Modifier.fillMaxWidth().background(colorResource(R.color.white), RoundedCornerShape(10.dp)),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(R.color.darkblue),
+            unfocusedBorderColor = colorResource(R.color.darkblue),
+            cursorColor = colorResource(R.color.darkblue),
+            placeholderColor = colorResource(R.color.darkblue),
+            textColor = colorResource(R.color.darkblue)
+        ),
+        shape = RoundedCornerShape(10.dp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+}
 
 //@Composable
 //fun MenuDown(list: List<String>, isOpen: Boolean, title: String, onChoisedText: (String) -> Unit, choisedtext: String = "") {
